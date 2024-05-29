@@ -14,10 +14,13 @@ upstream prometheus {
 
 server {
   listen 8080;
+  server_name <DNS_NAME>
+
   root /usr/share/nginx/html;
   index index.html index.htm;
   
-  access_log /var/log/nginx/mon1.access.log;
+  access_log /var/log/nginx/monitoring.access.log;
+  error_log /var/log/nginx/monitoring.error.log;
 
   location / {
     proxy_set_header Host $host;
