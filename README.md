@@ -1,6 +1,9 @@
 # Prometheus
 Prometheus monitoring system deployment with Grafana.
 
+# Files
+These files are updated with the progress of the project
+
 ## nginx_rproxy_config
 Nginx virtual host to listen on 8080 and redirect to the wanted services.
 - / -> grafana (port 3000)
