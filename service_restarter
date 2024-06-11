@@ -7,7 +7,7 @@ import re
 app = Flask(__name__)
 
 # Configure logging
-log_file = 'webhook.log'
+log_file = '/var/log/service_restarter.log'
 logging.basicConfig(filename=log_file, level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 @app.route('/', methods=['POST'])
@@ -17,18 +17,19 @@ def webhook():
         logging.info('Received POST request with data: %s', data)
 
         # Check if the alert is a MySQLDown alert
-        if data['alerts'][0]['labels']['alertname'] == 'MySQLDown':
-            logging.info('Received MySQLDown alert. Restarting MySQL service...')
-            
-            # Extract the IP address from the instance label
+        if data['alerts'][0]['labels']['alertname'] == 'MySQLDown':            
+            service = data['alerts'][0]['labels']['service']
+
             instance = data['alerts'][0]['labels']['instance']
             ip_address = re.match(r'^(.*?):\d+$', instance).group(1)
             
-            # Restart MySQL service on the specified server
-            subprocess.run(['sudo', '-u', 'restarter', 'ssh', f'restarter@{ip_address}', 'sudo systemctl restart mysql'])
-            logging.info('MySQL service restarted successfully on instance %s.', ip_address)
+            logging.info(f'Service {service} down on instance {ip_address}. Trying to restart..')
+
+            # Restart the service on the specified server
+            subprocess.run(['sudo', '-u', 'restarter', 'ssh', f'restarter@{ip_address}', f'sudo systemctl restart {service}'])
+            logging.info('MySQL service restarting on instance.. %s.', ip_address)
         else:
-            logging.info('Received alert is not MySQLDown. No action taken.')
+            logging.info('Service unknown.')
     except Exception as e:
         logging.error('An error occurred: %s', str(e))
     return '', 200
