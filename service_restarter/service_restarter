@@ -14,22 +14,21 @@ logging.basicConfig(filename=log_file, level=logging.DEBUG, format='%(asctime)s 
 @app.route('/', methods=['POST'])
 def webhook():
     try:
-        logging.info('Received POST request with data: %s', data)
-
         data = request.json
         data_labels = data['alerts'][0]['labels']
         alertnames_file = "/etc/service_restarter/alertnames.yml"
+
+        logging.info('Received POST request with data: %s', data)
 
         # Get List of alerts needing a restart
         with open(alertnames_file, 'r') as stream:
             list_service = yaml.safe_load(stream)
 
-        # Check if the alert is a MySQLDown alert
-        if data_labels['alertname'] in list_service['services']:  
-            logging.info(f'Alert {data_labels['alertname']} found in f{alertnames_file}')
+        if data_labels['alertname'] in list_service['alertnames']:  
+            logging.info('Alert ' + data_labels['alertname'] + f' found in f{alertnames_file}')
 
-            service = data['alerts'][0]['labels']['service']
-            instance = data['alerts'][0]['labels']['instance']
+            service = data_labels['service']
+            instance = data_labels['instance']
             ip_address = re.match(r'^(.*?):\d+$', instance).group(1)
             
             logging.info(f'Service {service} down on instance {ip_address}. Trying to restart..')
