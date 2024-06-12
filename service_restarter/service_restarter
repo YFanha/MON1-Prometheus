@@ -2,6 +2,7 @@
 from flask import Flask, request
 import subprocess
 import logging
+import yaml
 import re
 
 app = Flask(__name__)
@@ -14,10 +15,15 @@ logging.basicConfig(filename=log_file, level=logging.DEBUG, format='%(asctime)s 
 def webhook():
     try:
         data = request.json
+        data_labels = data['alerts'][0]['labels']
         logging.info('Received POST request with data: %s', data)
 
+        # Get List of alerts needing a restart
+        with open("alertnames.yml", 'r') as stream:
+            list_service = yaml.safe_load(stream)
+
         # Check if the alert is a MySQLDown alert
-        if data['alerts'][0]['labels']['alertname'] == 'MySQLDown':            
+        if data_labels['alertname'] in list_service['services']:            
             service = data['alerts'][0]['labels']['service']
 
             instance = data['alerts'][0]['labels']['instance']
