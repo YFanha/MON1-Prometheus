@@ -1,5 +1,5 @@
 # Prometheus
-Prometheus monitoring system deployment with Grafana.
+Deployment of a Prometheus monitoring system with Grafana.
 
 # Files
 These files are updated with the progress of the project
