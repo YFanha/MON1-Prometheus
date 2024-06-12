@@ -14,18 +14,21 @@ logging.basicConfig(filename=log_file, level=logging.DEBUG, format='%(asctime)s 
 @app.route('/', methods=['POST'])
 def webhook():
     try:
-        data = request.json
-        data_labels = data['alerts'][0]['labels']
         logging.info('Received POST request with data: %s', data)
 
+        data = request.json
+        data_labels = data['alerts'][0]['labels']
+        alertnames_file = "/etc/service_restarter/alertnames.yml"
+
         # Get List of alerts needing a restart
-        with open("alertnames.yml", 'r') as stream:
+        with open(alertnames_file, 'r') as stream:
             list_service = yaml.safe_load(stream)
 
         # Check if the alert is a MySQLDown alert
-        if data_labels['alertname'] in list_service['services']:            
-            service = data['alerts'][0]['labels']['service']
+        if data_labels['alertname'] in list_service['services']:  
+            logging.info(f'Alert {data_labels['alertname']} found in f{alertnames_file}')
 
+            service = data['alerts'][0]['labels']['service']
             instance = data['alerts'][0]['labels']['instance']
             ip_address = re.match(r'^(.*?):\d+$', instance).group(1)
             
@@ -35,7 +38,7 @@ def webhook():
             subprocess.run(['sudo', '-u', 'restarter', 'ssh', f'restarter@{ip_address}', f'sudo systemctl restart {service}'])
             logging.info('MySQL service restarting on instance.. %s.', ip_address)
         else:
-            logging.info('Service unknown.')
+            logging.info(f'Alert not found in {alertnames_file}')
     except Exception as e:
         logging.error('An error occurred: %s', str(e))
     return '', 200
