@@ -15,7 +15,7 @@ Nginx virtual host to listen on 8080 and redirect to the wanted services.
 Template of the prometheus.service. The template already include the modifications to work with the Nginx reverse proxy.
 
 ## Configuration-AWS
-Store the actuals configuration files of the prometheus's components. 
+Stores the actuals configuration files of the prometheus's components. 
 - Prometheus (/app/prometheus2.51.2)
 - Alertmanager (/app/alertmanager.yml/)
 - service_restarter (/etc/service_restarter)
