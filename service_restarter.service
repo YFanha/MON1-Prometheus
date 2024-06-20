@@ -1,0 +1,11 @@
+[Unit]
+Description=Service Restarter for Prometheus Alerts
+After=network.target
+
+[Service]
+User=restarter
+ExecStart=/usr/bin/service_restarter
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

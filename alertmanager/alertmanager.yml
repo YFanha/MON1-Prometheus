@@ -1,0 +1,28 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'discord'
+  group_by: ['alertname']
+  group_wait: 5s
+  group_interval: 1m
+  repeat_interval: 1m
+  routes:
+  - match:
+      alertname: 'MySQLDown'
+    receiver: 'restarter'
+
+receivers:
+- name: 'discord'
+  discord_configs:
+  - webhook_url: 'https://discord.com/api/webhooks/1250010842678689855/hwwTMw_lZOTeD2GdAcxdGt6NRvmqJQx2R8V7NCysqWWBY8XxtnuwqFZeeATp-M6GtUfy'
+    send_resolved: true
+    title: '{{ template "discord.notification.title" . }}'
+    message: '{{ template "discord.notification.description" . }}'
+- name: 'restarter'
+  webhook_configs:
+  - url: 'http://localhost:5001/'  # Calling our own script running on port 5001 (flask app)
+    send_resolved: true
+
+templates:
+- '/app/alertmanager/alertmanager-templates.tmpl'

@@ -1,0 +1,26 @@
+groups:
+  - name: DebianMemory
+    rules:
+      - alert: DebianMemoryUsageOver60%
+        expr: ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes) * 100 > 60
+        for: 30s
+        labels:
+          severity: warning
+          machine_name: "[{{ $labels.machinename }}]"
+          description_client: "Utilisation mémoire trop élevée"
+        annotations:
+          summary: "Instance [{{ $labels.instance }}] > 60% memory usage"
+          description: "Memory usage is at {{ $value }}%"
+
+  - name: WindowsMemory
+    rules:
+      - alert: WindowsMemoryUsageOver60%
+        expr: ((windows_cs_physical_memory_bytes - windows_os_physical_memory_free_bytes) / windows_cs_physical_memory_bytes) * 100 > 60
+        for: 30s
+        labels:
+          severity: warning
+          machine_name: "[{{ $labels.machinename }}]"
+          description_client: "Utilisation mémoire trop élevée"
+        annotations:
+          summary: "Instance [{{ $labels.instance }}] > 60% memory usage"
+          description: "Memory usage is at {{ $value }}%"
