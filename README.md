@@ -14,11 +14,29 @@ Nginx virtual host to listen on 8080 and redirect to the wanted services.
 ### Templates/prometheus.service.template
 Template of the prometheus.service. The template already include the modifications to work with the Nginx reverse proxy.
 
-## Configuration-AWS
-Stores the actuals configuration files of the prometheus's components. 
-- Prometheus (/app/prometheus2.51.2)
-- Alertmanager (/app/alertmanager.yml/)
-- service_restarter (/etc/service_restarter)
-- prometheus.service (/etc/systemd/system/prometheus.service)
-- alertmanager.service (/etc/systemd/system/alertmanager.service)
-- service_restarter.service (/etc/systemd/system/service_restarter.service)
+## Documentation
+Images/Schema for the wiki.
+
+## alertmanager
+Files of the **running** Alertmanager instance (/app/alertmanager).
+
+## prometheus2.51.2
+Files of the **running** Prometheus instance (/app/prometheus2.51.2).
+
+## alertnames.yml
+> /etc/service_restarter.yml (Hard link) \
+File for service_restarter.
+
+## Services files
+
+### alertmanager.service
+> /etc/systemd/system/alertmanager.service (Hard link) \
+Service file of Alertmanager. Store the alerts that should trigger a service restart.
+
+### prometheus.service
+> /etc/systemd/system/prometheus.service (Hard link) \
+Service file of Prometheus.
+
+### service_restarter.service
+> /etc/systemd/system/service_restarter.service (Hard link) \
+Service file of [Service Restarter](https://github.com/YFanha/service_restarter).
