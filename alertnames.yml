@@ -1,1 +1,5 @@
-/etc/service_restarter/alertnames.yml
+alertnames:
+  - MySQLDown
+  - Apache2Down
+  - NginxDown
+  - NtpDown
