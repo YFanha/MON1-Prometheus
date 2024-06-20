@@ -1,4 +1,1 @@
-alertnames:
-  - MySQLDown
-  - Apache2Down
-  - NginxDown
+/etc/service_restarter/alertnames.yml
