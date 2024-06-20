@@ -1,0 +1,12 @@
+groups:
+  - name: mysql_alerts
+    rules:
+      - alert: MySQLDown
+        expr: mysql_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: mysql
+        annotations:
+          summary: "MySQL service is down"
+          description: "The MySQL service on instance {{ $labels.instance }} is down."

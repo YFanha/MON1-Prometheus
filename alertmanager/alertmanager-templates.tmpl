@@ -1,0 +1,24 @@
+{{ define "discord.notification.title" }}
+Alerte: {{ .CommonLabels.alertname }}
+{{ end }}
+
+{{ define "discord.notification.description" }}
+Bonjour,
+
+{{ if gt ( .Alerts.Firing | len) 0}}
+Nous avons détecté un problème sur la machine **{{ .CommonLabels.machine_name }}**.
+
+La machine est momentanément indisponible.
+
+Nous travaillons à la résolution du problème.
+{{ end }}
+
+{{ if gt ( .Alerts.Resolved | len) 0}}
+L'alerte concernant **{{ .CommonLabels.alertname }}** sur la machine **{{ .CommonLabels.machine_name }}** a été résolue.
+
+La machine est fonctionnelle.
+{{ end }}
+
+Cordialement,
+L'équipe IT.
+{{ end }}
